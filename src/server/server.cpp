@@ -63,15 +63,16 @@ namespace Ventura {
                                              event.channelID);
                             }
 
-                            // Logger::Info("A packet of length {} was received on channel {}",
-                            //              event.packet->dataLength,
-                            //              event.channelID);
+                            Logger::Info("A packet of length {} was received on channel {}",
+                                         event.packet->dataLength,
+                                         event.channelID);
                             enet_packet_destroy(event.packet);
                             break;
                         case ENET_EVENT_TYPE_DISCONNECT:
                             Logger::Info("{} disconnected.",
                                          event.peer->data);
                             event.peer->data = NULL;
+                            enet_peer_reset(event.peer);
                             break;
                         case ENET_EVENT_TYPE_NONE:
                             break;

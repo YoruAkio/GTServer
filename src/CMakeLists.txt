@@ -75,6 +75,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     NOMINMAX
     WIN32_LEAN_AND_MEAN
+    FMT_HEADER_ONLY
     # CPPHTTPLIB_OPENSSL_SUPPORT
 )
 
