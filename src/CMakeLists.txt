@@ -19,10 +19,19 @@ add_executable(${PROJECT_NAME}
     ${SOURCE_FILES}
 )
 
+# disable all warnings support windows and linux
+if (WIN32)
+    add_definitions(/W0)
+    add_definitions(/bigobj)
+else ()
+    add_definitions(-w)
+endif ()
+
 if (MSVC)
     add_definitions(/EHsc)
 else ()
     add_definitions(-fexceptions)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 endif ()
 
 if (CONAN_EXPORTED)
@@ -32,21 +41,21 @@ else ()
     include(${CMAKE_CURRENT_SOURCE_DIR}/conan.cmake)
     conan_cmake_configure(REQUIRES
             fmt/10.2.1
-            spdlog/1.14.1
         GENERATORS CMakeDeps CMakeToolchain
         IMPORTS "bin, *.dll -> ./bin"
         OPTIONS
-            fmt/*:shared=True
-            spdlog/*:shared=True)
+            fmt/*:shared=True)
 
     conan_cmake_autodetect(settings)
     conan_cmake_install(PATH_OR_REFERENCE .
         BUILD missing
-        REMOTE conancenter
-        SETTINGS ${settings})
+        REMOTE conancenter)
 endif ()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}")
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}" ${CMAKE_MODULE_PATH})
+set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_BINARY_DIR}" ${CMAKE_PREFIX_PATH})
+add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 
 find_package(fmt REQUIRED)
 if (fmt_FOUND)
@@ -55,15 +64,6 @@ if (fmt_FOUND)
     target_include_directories(${PROJECT_NAME} PUBLIC ${fmt_INCLUDE_DIRS})
 else ()
     message(FATAL_ERROR "Could not find fmt")
-endif ()
-
-find_package(spdlog REQUIRED)
-if (spdlog_FOUND)
-    message(STATUS "Found spdlog: ${spdlog_VERSION}, at ${spdlog_INCLUDE_DIRS}, ${spdlog_LIBRARIES}")
-    target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
-    target_include_directories(${PROJECT_NAME} PUBLIC ${fmt_INCLUDE_DIRS})
-else ()
-    message(FATAL_ERROR "Could not find spdlog")
 endif ()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

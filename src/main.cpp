@@ -1,10 +1,8 @@
-#include <spdlog/logger.h>
-#include <fmt/core.h>
-#include <spdlog/spdlog.h>
 #include <enet/enet.h>
 
-#include "server/server.h"
-#include "packet/packet.h"
+#include "Server/Server.h"
+#include "Packet/Packet.h"
+#include "Utils/Logger.h"
 
 using namespace std;
 
@@ -23,21 +21,21 @@ int main() {
 
 //     host = enet_host_create(&address, 1024, 20, 0, 0);
 //     if (!host) {
-//         spdlog::error("An error occurred while creating an ENet host.");
+//         Logger::Error("An error occurred while creating an ENet host.");
 //         return 1;
 //     }
 
 //     host->checksum = enet_crc32;
 //     enet_host_compress_with_range_coder(host);
 
-//     spdlog::info("Server started on port 17091");
+//     Logger::Info("Server started on port 17091");
 
 //     bool running = true;
 //     ENetEvent event;
 //     while (running && enet_host_service(host, &event, 1000) >= 0) {
 //         switch (event.type) {
 //             case ENET_EVENT_TYPE_CONNECT: {
-//                 spdlog::info("Client connected");
+//                 Logger::Info("Client connected");
 //                 break;
 //             }
 //             case ENET_EVENT_TYPE_RECEIVE: {
@@ -45,13 +43,13 @@ int main() {
 //                 std::vector<char> data(event.packet->data, event.packet->data + event.packet->dataLength);
 //                 std::string packetData(data.begin(), data.end());
 
-//                 spdlog::info("Packet received: {}", packetData);
+//                 Logger::Info("Packet received: {}", packetData);
 //                 ENetPacket *packet = enet_packet_create("Hello, world!", 12, ENET_PACKET_FLAG_RELIABLE);
 //                 enet_peer_send(event.peer, 0, packet);
 //                 break;
 //             }
 //             case ENET_EVENT_TYPE_DISCONNECT: {
-//                 spdlog::info("Client disconnected");
+//                 Logger::Info("Client disconnected");
 //                 break;
 //             }
 //             case ENET_EVENT_TYPE_NONE:
